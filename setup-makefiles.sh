@@ -8,7 +8,7 @@
 
 set -e
 
-DEVICE=fog
+DEVICE=spes
 VENDOR=xiaomi
 INITIAL_COPYRIGHT_YEAR=2022
 
