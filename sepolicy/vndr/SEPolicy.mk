@@ -1,5 +1,5 @@
 # Board specific SELinux policy variable definitions
-SEPOLICY_PATH:= device/xiaomi/fog/sepolicy/vndr
+SEPOLICY_PATH:= device/xiaomi/spes/sepolicy/vndr
 QSSI_SEPOLICY_PATH:= device/qcom/sepolicy
 SYS_ATTR_PROJECT_PATH := $(TOP)/device/qcom/sepolicy/generic/public/attribute
 BOARD_PLAT_PUBLIC_SEPOLICY_DIR := \
