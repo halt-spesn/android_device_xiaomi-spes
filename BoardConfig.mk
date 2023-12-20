@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-DEVICE_PATH := device/xiaomi/fog
+DEVICE_PATH := device/xiaomi/spes
 
 # A/B
 BOARD_USES_RECOVERY_AS_BOOT := true
@@ -223,7 +223,7 @@ USE_SENSOR_MULTI_HAL := true
 BOARD_VNDK_VERSION := current
 
 # Sepolicy
-include device/xiaomi/fog/sepolicy/vndr/SEPolicy.mk
+include device/xiaomi/spes/sepolicy/vndr/SEPolicy.mk
 
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
@@ -257,4 +257,4 @@ WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # Inherit the proprietary files
-include vendor/xiaomi/fog/BoardConfigVendor.mk
+include vendor/xiaomi/spes/BoardConfigVendor.mk
