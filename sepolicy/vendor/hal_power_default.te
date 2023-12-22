@@ -3,6 +3,7 @@ allow hal_power_default input_device:dir r_dir_perms;
 allow hal_power_default input_device:chr_file rw_file_perms;
 allow hal_power_default proc_tp_gesture:dir search;
 allow hal_power_default proc_tp_gesture:file rw_file_perms;
+allow hal_power_default sysfs_touchpanel:dir search;
 
 r_dir_file(hal_power_default, input_device)
 
@@ -10,6 +11,7 @@ allow hal_power_default {
   vendor_sysfs_devfreq
   sysfs_msm_subsys
   sysfs_fs_f2fs
+  sysfs_touchpanel
 }:dir search;
 
 allow hal_power_default {
@@ -21,6 +23,7 @@ allow hal_power_default {
   sysfs_msm_subsys
   vendor_sysfs_scsi_host 
   sysfs_fs_f2fs
+  sysfs_touchpanel
 }:{
   file
   lnk_file
