@@ -16,10 +16,9 @@ I have decided to adapt the fog Android 11 tree for spes in my free time, based 
 * Flashlight
 * GPS
 * SDCard
+* NFC
 
 ### What doesn't work, or isn't tested
-* NFC is broken
-* Screen recorder is broken
 * Refresh rate qs toggle is broken
 
 - Credits to @boedhack99 for inital tree for sm6225 devices
