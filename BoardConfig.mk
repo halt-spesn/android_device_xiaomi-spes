@@ -94,7 +94,7 @@ BOARD_HAVE_QCOM_FM := true
 # HIDL
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     $(DEVICE_PATH)/configs/vintf/framework_compatibility_matrix.xml \
-    vendor/lineage/config/device_framework_matrix.xml
+    vendor/aosp/config/device_framework_matrix.xml
 DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/configs/vintf/manifest.xml
 DEVICE_MATRIX_FILE += $(DEVICE_PATH)/configs/vintf/compatibility_matrix.xml
 ODM_MANIFEST_SKUS += k7tn
@@ -104,8 +104,8 @@ ODM_MANIFEST_K7TN_FILES := $(DEVICE_PATH)/configs/vintf/manifest_k7tn.xml
 HWUI_COMPILE_FOR_PERF := true
 
 # Init
-TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):init_xiaomi_spes
-TARGET_RECOVERY_DEVICE_MODULES := init_xiaomi_spes
+TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):libinit_spes
+TARGET_RECOVERY_DEVICE_MODULES := libinit_spes
 
 # Kernel
 BOARD_KERNEL_BASE        := 0x00000000
@@ -134,7 +134,7 @@ TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_CLANG_COMPILE := true
 TARGET_LINUX_KERNEL_VERSION := 4.19
 TARGET_KERNEL_CLANG_VERSION := r383902
-TARGET_KERNEL_CONFIG := vendor/spes-perf_defconfig
+TARGET_KERNEL_CONFIG := spes-ksu_defconfig
 TARGET_KERNEL_HEADERS := kernel/xiaomi/spes
 TARGET_KERNEL_SOURCE := kernel/xiaomi/spes
 

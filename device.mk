@@ -431,9 +431,6 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.3.vendor \
-    android.hardware.power@1.3 \
-    android.hardware.power-service.qti \
     vendor.qti.hardware.perf@2.2.vendor \
     android.hardware.power.stats@1.0-service.mock \
     android.hardware.power-service.xiaomi-libperfmgr
@@ -445,6 +442,10 @@ PRODUCT_SOONG_NAMESPACES += \
 # Public libraries
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
+
+# Powerhint
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/powerhint.json:$(TARGET_COPY_OUT_VENDOR)/etc/powerhint.json
 
 # QMI
 PRODUCT_PACKAGES += \
