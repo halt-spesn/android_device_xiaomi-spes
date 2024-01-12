@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 crDroid Android Project
+ * Copyright (C) 2021 WaveOS
  * Copyright (C) 2021 Chaldeaprjkt
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,7 @@ import java.util.Locale;
 
 public class RefreshRateTileService extends TileService {
     private static final String KEY_MIN_REFRESH_RATE = "min_refresh_rate";
+    private static final String KEY_PREFERRED_REFRESH_RATE = "preferred_refresh_rate";
     private static final String KEY_PEAK_REFRESH_RATE = "peak_refresh_rate";
 
     private Context context;
@@ -55,9 +56,9 @@ public class RefreshRateTileService extends TileService {
     }
 
     private int getSettingOf(String key) {
-        float rate = Settings.System.getFloat(context.getContentResolver(), key, 120);
-        return availableRates.indexOf(
-                Float.valueOf(String.format(Locale.US, "%.02f", rate)));
+        float rate = Settings.System.getFloat(context.getContentResolver(), key, 60);
+        int active = availableRates.indexOf((int) Math.round(rate));
+        return Math.max(active, 0);
     }
 
     private void syncFromSettings() {
@@ -66,15 +67,15 @@ public class RefreshRateTileService extends TileService {
     }
 
     private void cycleRefreshRate() {
-        if(activeRateMax == 0){
-    	    if(activeRateMin == 0){
-                activeRateMin= availableRates.size();
-	    }
-	    activeRateMax = activeRateMin;
-	    float rate = availableRates.get(activeRateMin - 1);
-  	    Settings.System.putFloat(context.getContentResolver(), KEY_MIN_REFRESH_RATE, rate);
+        if (activeRateMin < availableRates.size() - 1) {
+            activeRateMin++;
+        } else {
+            activeRateMin = 0;
         }
-        float rate = availableRates.get(activeRateMax - 1);
+
+        float rate = availableRates.get(activeRateMin);
+        Settings.System.putFloat(context.getContentResolver(), KEY_MIN_REFRESH_RATE, rate);
+        Settings.System.putFloat(context.getContentResolver(), KEY_PREFERRED_REFRESH_RATE, rate);
         Settings.System.putFloat(context.getContentResolver(), KEY_PEAK_REFRESH_RATE, rate);
     }
 
