@@ -14,6 +14,7 @@ $(call inherit-product, vendor/aosp/config/common_full_phone.mk)
 # Inherit from spes device
 $(call inherit-product, device/xiaomi/spes/device.mk)
 
+USE_PIXEL_CHARGING := true
 PRODUCT_NAME := aosp_spes
 PRODUCT_DEVICE := spes
 PRODUCT_MANUFACTURER := Xiaomi

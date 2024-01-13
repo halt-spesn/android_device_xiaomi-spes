@@ -22,6 +22,9 @@ $(call inherit-product-if-exists, vendor/gapps/config.mk)
 # Inherit QTI Bluetooth
 $(call inherit-product, vendor/qcom/opensource/commonsys-intf/bluetooth/bt-system-opensource-product.mk)
 
+# Miui Camera
+$(call inherit-product-if-exists, device/xiaomi/sm6225-common-miuicamera/config.mk)
+
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -491,8 +494,7 @@ PRODUCT_PACKAGES += \
 
 # Sensors
 PRODUCT_PACKAGES += \
-    android.frameworks.sensorservice@1.0 \
-    android.hardware.sensors@2.1-service.xiaomi_bengal-multihal \
+    android.hardware.sensors@2.0-service.multihal \
     libsensorndkbridge
 
 PRODUCT_COPY_FILES += \
