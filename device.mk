@@ -420,6 +420,10 @@ PRODUCT_SYSTEM_PROPERTIES += \
     ro.nfc.port=I2C
 
 # Overlays
+PRODUCT_PACKAGES += \
+    SpesFrameworksOverlay \
+    SpesSystemUIOverlay
+
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
 

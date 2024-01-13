@@ -8,3 +8,4 @@ allow stflashtool vendor_nfc_nq_prop:file { read getattr open map };
 
 get_prop(stflashtool, vendor_radio_prop)
 set_prop(stflashtool, vendor_nfc_nq_prop)
+dontaudit stflashtool nfc_prop:file read;

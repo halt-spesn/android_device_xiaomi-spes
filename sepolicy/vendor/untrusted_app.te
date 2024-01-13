@@ -8,5 +8,12 @@ allow untrusted_app untrusted_app:udp_socket ioctl;
 allow untrusted_app vendor_sysfs_soc:dir { search };
 allow untrusted_app vendor_sysfs_soc:file r_file_perms;
 allow untrusted_app zygote:unix_stream_socket { getopt };
+allow untrusted_app proc_net:file read;
+dontaudit untrusted_app proc_net_tcp_udp:file read;
+dontaudit untrusted_app proc_tty_drivers:file read;
+allow untrusted_app rootfs:dir read;
+dontaudit untrusted_app serialno_prop:file read;
+allow untrusted_app unlabeled:dir search;
+allow untrusted_app vendor_default_prop:file { getattr map open };
 
 get_prop(untrusted_app, vendor_persist_camera_prop)

@@ -14,3 +14,14 @@ binder_call(system_app, hal_vibrator_default)
 r_dir_file(system_app, vendor_sysfs_battery_supply)
 
 get_prop(system_app, vendor_persist_camera_prop)
+r_dir_file(system_app, vendor_sysfs_graphics)
+
+allow system_app {
+    vendor_sysfs_graphics
+}:dir search;
+
+allow system_app {
+    vendor_sysfs_graphics
+}:file rw_file_perms;
+allow system_app system_data_file:dir { getattr search };
+allow system_app unlabeled:dir search;

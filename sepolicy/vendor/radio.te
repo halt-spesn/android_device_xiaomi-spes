@@ -1,3 +1,4 @@
 allow radio zygote:unix_stream_socket { getopt };
+allow radio unlabeled:dir search;
 
 get_prop(radio, vendor_audio_prop)

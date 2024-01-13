@@ -1,1 +1,3 @@
 get_prop(bluetooth, incremental_prop);
+allow bluetooth system_data_file:dir search;
+allow bluetooth unlabeled:dir search;

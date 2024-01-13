@@ -6,6 +6,3 @@ allow system_app system_suspend:binder { call };
 allow system_app system_suspend_control_service:service_manager { find };
 allow system_app unlabeled:dir { search };
 allow system_app vold:binder { call };
-allow system_app vendor_sysfs_graphics:dir search;
-allow system_app vendor_sysfs_graphics:file read;
-allow system_app vendor_sysfs_graphics:file write;
