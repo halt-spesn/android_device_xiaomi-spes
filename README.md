@@ -9,7 +9,6 @@ I have decided to adapt the fog Android 11 tree for spes in my free time, based 
 * WiFi
 * Mobile Data
 * VoLTE
-* Bluetooth
 * Sound/Vibration
 * Fingerprint
 * Camera
@@ -19,6 +18,9 @@ I have decided to adapt the fog Android 11 tree for spes in my free time, based 
 * NFC
 
 ### What doesn't work, or isn't tested
-* Refresh rate qs toggle is broken
+* Bluetooth
+* Recovery in ramdisk
+* Proximity sensor
+* Offline charging
 
 - Credits to @boedhack99 for inital tree for sm6225 devices
