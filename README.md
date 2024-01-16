@@ -4,6 +4,8 @@ I have decided to adapt the fog Android 11 tree for spes in my free time, based 
 
 ### What works?
 * Boots
+* Bluetooth
+* Sensors
 * Selinux enforcing 
 * RIL
 * WiFi
@@ -18,9 +20,7 @@ I have decided to adapt the fog Android 11 tree for spes in my free time, based 
 * NFC
 
 ### What doesn't work, or isn't tested
-* Bluetooth
 * Recovery in ramdisk
-* Proximity sensor
 * Offline charging
 
 - Credits to @boedhack99 for inital tree for sm6225 devices
