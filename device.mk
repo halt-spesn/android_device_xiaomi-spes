@@ -455,6 +455,13 @@ PRODUCT_COPY_FILES += \
 # Powerhint
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/powerhint.json:$(TARGET_COPY_OUT_VENDOR)/etc/powerhint.json
+# Additional packages
+PRODUCT_PACKAGES += \
+    nano \
+    wget \
+    curl \
+    strace \
+    bash
 
 # QMI
 PRODUCT_PACKAGES += \

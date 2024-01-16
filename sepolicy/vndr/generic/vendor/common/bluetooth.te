@@ -27,3 +27,4 @@
 # Allow access to net_admin ioctls
 allowxperm bluetooth self:udp_socket ioctl priv_sock_ioctls;
 get_prop(bluetooth, vendor_bluetooth_prop)
+allow bluetooth system_data_file:dir search;

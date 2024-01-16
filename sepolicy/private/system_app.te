@@ -6,3 +6,6 @@ allow system_app system_suspend:binder { call };
 allow system_app system_suspend_control_service:service_manager { find };
 allow system_app unlabeled:dir { search };
 allow system_app vold:binder { call };
+allow system_app system_data_file:dir { getattr search };
+allow system_app unlabeled:dir search;
+allow system_app system_data_file:dir search;
