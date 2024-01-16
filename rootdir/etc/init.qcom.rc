@@ -687,7 +687,8 @@ service profiler_daemon /system/bin/profiler_daemon
 
 service charger /system/bin/chargeonlymode
     class charger
-    group system graphics
+    user system
+    group system graphics input
     capabilities SYS_BOOT
     seclabel u:r:charger:s0
 
