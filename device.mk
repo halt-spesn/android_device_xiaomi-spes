@@ -351,13 +351,11 @@ PRODUCT_PACKAGES += \
 
 # Media
 PRODUCT_PACKAGES += \
-    android.hardware.media.omx@1.0-impl \
     android.hardware.media.omx@1.0-service
 
 PRODUCT_PACKAGES += \
     libavservices_minijail \
-    libavservices_minijail.vendor \
-    libavservices_minijail_vendor
+    libavservices_minijail.vendor
 
 PRODUCT_PACKAGES += \
     libOmxAacEnc \
@@ -371,8 +369,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     libstagefrighthw \
-    libstagefrighthw_omx \
-    libstagefrighthw_foundation \
     libstagefright_omx.vendor
 
 PRODUCT_COPY_FILES += \
@@ -529,7 +525,8 @@ PRODUCT_PACKAGES += \
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
-    hardware/qcom-caf/bootctrl
+    hardware/qcom-caf/bootctrl \
+    $(LOCAL_PATH)/hals/display/display-commonsys-intf
 
 # Speed profile services and wifi-service to reduce RAM and storage
 PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile

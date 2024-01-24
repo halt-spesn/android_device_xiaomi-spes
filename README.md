@@ -1,26 +1,21 @@
-# Android 11 Tree for spes
+## Device Configuration for Xiaomi Redmi Note 11
 
-I have decided to adapt the fog Android 11 tree for spes in my free time, based on Jabiyeff's and NotKerd's work (Credits to them). For now the tree is not complete, so some bugs can be expected. Also it's just for fun and learning purposes.
+The Xiaomi Redmi Note 11 (codenamed _"spes/spesn"_) is a mid range smartphone from Xiaomi.
 
-### What works?
-* Boots
-* Bluetooth
-* Sensors
-* Selinux enforcing 
-* RIL
-* WiFi
-* Mobile Data
-* VoLTE
-* Sound/Vibration
-* Fingerprint
-* Camera
-* Flashlight
-* GPS
-* SDCard
-* NFC
+Redmi Note 11 was announced and released in January/February 2022.
 
-### What doesn't work, or isn't tested
-* Recovery in ramdisk
-* Offline charging
+## Device specifications
 
-- Credits to @boedhack99 for inital tree for sm6225 devices
+ Device       | Xiaomi Redmi Note 11
+ -----------: | :--------------------------------------------------
+ CPU | Quad-Core 2.4 GHz Kryo 265 Gold & Quad-Core 1.9 GHz Kryo 265 Silver
+Chipset | Qualcomm SM6225 Snapdragon 680
+GPU | Adreno 610
+Memory | 4/6 GB RAM
+Shipped Android Version | 11.0
+Storage | 64/128 GB (UFS 2.2)
+Battery | Non-removable Li-Po 5000 mAh
+Display | 1080 x 2400 pixels, 6.43 inches (~409 ppi pixel density)
+Camera | Main 50 MP f/1.8, ultrawide lens, macro lens, depth lens, LED flash
+
+## Device picture ![Redmi Note 11](https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-redmi-note-11-global-1.jpg "Redmi Note 11")
