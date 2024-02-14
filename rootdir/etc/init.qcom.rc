@@ -752,7 +752,7 @@ service vendor.LKCore-rel /vendor/bin/LKCore
     group system log diag
 
 on charger
-    write /sys/fs/selinux/enforce "0"
+    start set_permissive_chg
     setprop persist.sys.usb.config mass_storage
     start qcom-post-boot
     chown system system /sys/class/backlight/panel0-backlight/brightness
@@ -827,3 +827,11 @@ service vendor.imsdatadaemon /vendor/bin/imsdatadaemon
     socket ims_datad stream 0660 system radio
     group radio wifi inet vendor_qti_diag log
     disabled
+
+# Set permissive on offline charging mode
+service set_permissive_chg /vendor/bin/set_permissive.sh
+    class main
+    user root
+    seclabel u:r:su:s0
+    disabled
+    oneshot
