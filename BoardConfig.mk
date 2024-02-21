@@ -195,6 +195,9 @@ TARGET_COPY_OUT_VENDOR := vendor
 # OTA assert
 TARGET_OTA_ASSERT_DEVICE := spes,spesn
 
+# Enable stats logging in LMKD
+TARGET_LMKD_STATS_LOG := true
+
 # Platform
 BOARD_VENDOR := xiaomi
 TARGET_BOARD_PLATFORM := bengal
