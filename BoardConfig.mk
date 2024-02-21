@@ -235,6 +235,9 @@ USE_SENSOR_MULTI_HAL := true
 # Treble flag
 BOARD_VNDK_VERSION := current
 
+# SurfaceFlinger
+TARGET_USE_AOSP_SURFACEFLINGER := true
+
 # Sepolicy
 include device/xiaomi/spes/sepolicy/vndr/SEPolicy.mk
 
