@@ -49,6 +49,11 @@ ro.surface_flinger.refresh_rate_switching=false
 ro.surface_flinger.enable_frame_rate_override=false
 ro.surface_flinger.use_content_detection_for_refresh_rate=false
 
+# Blur
+ro.sf.blurs_are_expensive=1
+ro.surface_flinger.supports_background_blur=1
+ro.launcher.blur.appLauncher
+
 # FP
 ro.hardware.fp.sideCap=true
 
