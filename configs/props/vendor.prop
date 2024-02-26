@@ -191,6 +191,9 @@ vendor.sys.media.target.version=3
 # OTG
 persist.sys.oem.otg_support=true
 
+# Memory optimizations
+ro.vendor.qti.sys.fw.bservice_enable=true
+
 # Perf
 ro.vendor.extension_library=libqti-perfd-client.so
 
