@@ -22,6 +22,9 @@ $(call inherit-product-if-exists, vendor/gapps/config.mk)
 # Inherit QTI Bluetooth
 $(call inherit-product, vendor/qcom/opensource/commonsys-intf/bluetooth/bt-system-opensource-product.mk)
 
+# Viper4AndroidFX
+$(call inherit-product, packages/apps/ViPER4AndroidFX/config.mk)
+
 # Miui Camera
 $(call inherit-product-if-exists, device/xiaomi/sm6225-common-miuicamera/config.mk)
 
