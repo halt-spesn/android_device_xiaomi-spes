@@ -18,6 +18,7 @@ persist.vendor.service.bdroid.soc.alwayson=true
 ro.bluetooth.library_name=libbluetooth_qti.so
 ro.bluetooth.emb_wp_mode=false
 ro.bluetooth.wipower=false
+ro.telephony.call_ring.delay=0
 
 # Camera
 camera.disable_zsl_mode=1
@@ -48,6 +49,34 @@ ro.surface_flinger.vsync_sf_event_phase_offset_ns=6000000
 ro.surface_flinger.refresh_rate_switching=false
 ro.surface_flinger.enable_frame_rate_override=false
 ro.surface_flinger.use_content_detection_for_refresh_rate=false
+
+# GpuBoost
+debug.composition.type=c2d
+debug.composition.type=gpu
+debug.enabletr=true
+debug.overlayui.enable=1
+debug.performance.tuning=1
+debug.hwui.renderer=true
+hw3d.force=1
+hwui.disable_vsync=true
+hwui.render_dirty_regions=false
+persist.sys.composition.type=c2d
+persist.sys.composition.type=gpu
+persist.sys.ui.hw=1
+ro.config.enable.hw_accel=true
+ro.product.gpu.driver=1
+ro.fb.mode=1
+ro.sf.compbypass.enable=0
+video.accelerate.hw=1
+debug.egl.hw=0
+debug.gralloc.gfx_ubwc_disable=0
+debug.mdpcomp.logs=0
+persist.vendor.color.matrix=2
+vendor.gralloc.disable_ubwc=0
+ro.vendor.qti.sys.fw.bg_apps_limit=120
+ro.vendor.qti.sys.fw.bservice_enable=true
+ro.vendor.qti.core.ctl_max_cpu=4
+ro.vendor.qti.core.ctl_min_cpu=2
 
 # Blur
 ro.sf.blurs_are_expensive=1
@@ -154,8 +183,3 @@ persist.sys.wfd.virtual=0
 
 # Zygote
 persist.device_config.runtime_native.usap_pool_enabled=true
-
-# Blur
-#ro.sf.blurs_are_expensive=1
-#ro.surface_flinger.supports_background_blur=1
-#ro.launcher.blur.appLauncher
