@@ -642,5 +642,9 @@ PRODUCT_BOOT_JARS += \
 PRODUCT_PACKAGES += \
     XiaomiParts
 
+# Terminal 
+PRODUCT_PACKAGES += \
+    Terminal
+
 # Inherit the proprietary files
 $(call inherit-product, vendor/xiaomi/spes/spes-vendor.mk)
