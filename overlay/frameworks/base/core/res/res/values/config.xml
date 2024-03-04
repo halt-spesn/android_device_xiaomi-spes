@@ -181,6 +181,20 @@
     <string translatable="false" name="config_mainBuiltInDisplayCutout">
         M -31.85 57.275 a 31.85 31.85 90 1 0 63.7 0 a 31.85 31.85 90 1 0 -63.7 0 Z
     </string>
+
+    <string translatable="false" name="config_mainBuiltInDisplayCutoutRectApproximation">
+        M 493.5,0
+        h 95
+        v 95
+        h -95
+        Z
+        @left
+    </string>
+
+    <bool name="config_fillMainBuiltInDisplayCutout">true</bool>
+
+    <bool name="config_physicalDisplayCutout">true</bool>
+
     <!-- Flag indicating whether the surface flinger has limited
          alpha compositing functionality in hardware.  If set, the window
          manager will disable alpha trasformation in animations where not
