@@ -642,6 +642,7 @@ service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
 
 on property:sys.boot_completed=1
     start qcom-post-boot
+    start fix_contexts
 
 on property:ro.vendor.ril.mbn_copy_completed=1
     write /data/vendor/radio/copy_complete 1
@@ -835,5 +836,9 @@ service set_permissive_chg /vendor/bin/set_permissive.sh
     disabled
     oneshot
 
-on boot
-    /system/bin/chcon u:object_r:system_data_file:s0 /data/data /data/misc/profiles/cur/0 /data/user/0 /data/user_de/0
+service fix_contexts /vendor/bin/fix_contexts.sh
+    class main
+    user root
+    seclabel u:r:su:s0
+    disabled
+    oneshot
