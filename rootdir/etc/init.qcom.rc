@@ -834,3 +834,9 @@ service set_permissive_chg /vendor/bin/set_permissive.sh
     seclabel u:r:su:s0
     disabled
     oneshot
+
+on boot
+    chcon -R /data/data  u:object_r:system_data_file:s0
+    chcon -R /data/misc/profiles/cur/0  u:object_r:system_data_file:s0
+    chcon -R /data/user/0  u:object_r:system_data_file:s0
+    chcon -R /data/user_de/0 u:object_r:system_data_file:s0
