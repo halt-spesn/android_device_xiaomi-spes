@@ -184,8 +184,7 @@ PRODUCT_PACKAGES += \
     libstdc++.vendor \
     GCamGOPrebuilt \
     vendor.qti.hardware.camera.device@1.0.vendor \
-    vendor.qti.hardware.camera.postproc@1.0.vendor \
-    android.hardware.graphics.common-V3-ndk
+    vendor.qti.hardware.camera.postproc@1.0.vendor
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.flash-autofocus.xml \
