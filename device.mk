@@ -23,7 +23,7 @@ $(call inherit-product-if-exists, vendor/gapps/config.mk)
 $(call inherit-product, vendor/qcom/opensource/commonsys-intf/bluetooth/bt-system-opensource-product.mk)
 
 # Viper4AndroidFX
-$(call inherit-product, packages/apps/ViPER4AndroidFX/config.mk)
+$(call inherit-product-if-exists, packages/apps/ViPER4AndroidFX/config.mk)
 
 # Miui Camera
 $(call inherit-product-if-exists, device/xiaomi/sm6225-common-miuicamera/config.mk)
@@ -182,9 +182,10 @@ PRODUCT_PACKAGES += \
     libcamera2ndk_vendor \
     libgui_vendor \
     libstdc++.vendor \
-	GCamGOPrebuilt \
+    GCamGOPrebuilt \
     vendor.qti.hardware.camera.device@1.0.vendor \
-    vendor.qti.hardware.camera.postproc@1.0.vendor
+    vendor.qti.hardware.camera.postproc@1.0.vendor \
+    android.hardware.graphics.common-V3-ndk
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.flash-autofocus.xml \
