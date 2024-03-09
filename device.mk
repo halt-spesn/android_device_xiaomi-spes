@@ -26,7 +26,7 @@ $(call inherit-product, vendor/qcom/opensource/commonsys-intf/bluetooth/bt-syste
 $(call inherit-product-if-exists, packages/apps/ViPER4AndroidFX/config.mk)
 
 # Miui Camera
-$(call inherit-product-if-exists, device/xiaomi/sm6225-common-miuicamera/config.mk)
+$(call inherit-product-if-exists, vendor/xiaomi/camera/miuicamera.mk)
 
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
