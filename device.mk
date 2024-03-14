@@ -22,8 +22,11 @@ $(call inherit-product-if-exists, vendor/gapps/config.mk)
 # Inherit QTI Bluetooth
 $(call inherit-product, vendor/qcom/opensource/commonsys-intf/bluetooth/bt-system-opensource-product.mk)
 
+# Viper4AndroidFX
+$(call inherit-product-if-exists, packages/apps/ViPER4AndroidFX/config.mk)
+
 # Miui Camera
-$(call inherit-product-if-exists, device/xiaomi/sm6225-common-miuicamera/config.mk)
+$(call inherit-product-if-exists, vendor/xiaomi/camera/miuicamera.mk)
 
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
@@ -179,7 +182,6 @@ PRODUCT_PACKAGES += \
     libcamera2ndk_vendor \
     libgui_vendor \
     libstdc++.vendor \
-	Snap \
     vendor.qti.hardware.camera.device@1.0.vendor \
     vendor.qti.hardware.camera.postproc@1.0.vendor
 
@@ -279,8 +281,8 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
 
 #Framework prebuilt overlay
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/framework/framework-res__auto_generated_rro_vendor.apk:$(TARGET_COPY_OUT_VENDOR)/overlay/framework-res__auto_generated_rro_vendor.apk
+#PRODUCT_COPY_FILES += \
+#    $(LOCAL_PATH)/framework/framework-res__auto_generated_rro_vendor.apk:$(TARGET_COPY_OUT_VENDOR)/overlay/framework-res__auto_generated_rro_vendor.apk
 
 # FM
 PRODUCT_PACKAGES += \
@@ -303,10 +305,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml
-
-# Gatekeeper
-PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0.vendor
 
 # Health
 PRODUCT_PACKAGES += \
@@ -421,6 +419,7 @@ PRODUCT_SYSTEM_PROPERTIES += \
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
+    $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
@@ -430,10 +429,7 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.2 \
-    android.hardware.power@1.2.vendor \
-    android.hardware.power-service-qti \
-    vendor.qti.hardware.perf@2.2.vendor \
+    android.hardware.power-service.xiaomi-libperfmgr \
     android.hardware.power.stats@1.0-service.mock
 
 PRODUCT_SOONG_NAMESPACES += \
@@ -641,6 +637,10 @@ PRODUCT_BOOT_JARS += \
 # XiaomiParts
 PRODUCT_PACKAGES += \
     XiaomiParts
+
+# Terminal 
+PRODUCT_PACKAGES += \
+    Terminal
 
 # Inherit the proprietary files
 $(call inherit-product, vendor/xiaomi/spes/spes-vendor.mk)

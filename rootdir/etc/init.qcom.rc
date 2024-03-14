@@ -77,7 +77,6 @@ on post-fs
     chmod 0644 /mnt/vendor/dsp/fastrpc_shell_3
     mount none /mnt/vendor/dsp/fastrpc_shell_3 /vendor/dsp/cdsp/fastrpc_shell_3 bind
 
-on late-init
     # Start services for bootanim
     start surfaceflinger
     start bootanim
@@ -643,6 +642,7 @@ service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
 
 on property:sys.boot_completed=1
     start qcom-post-boot
+    start fix_contexts
 
 on property:ro.vendor.ril.mbn_copy_completed=1
     write /data/vendor/radio/copy_complete 1
@@ -830,6 +830,13 @@ service vendor.imsdatadaemon /vendor/bin/imsdatadaemon
 
 # Set permissive on offline charging mode
 service set_permissive_chg /vendor/bin/set_permissive.sh
+    class main
+    user root
+    seclabel u:r:su:s0
+    disabled
+    oneshot
+
+service fix_contexts /vendor/bin/fix_contexts.sh
     class main
     user root
     seclabel u:r:su:s0
