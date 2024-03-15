@@ -422,6 +422,7 @@ DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
+PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS :=
 
 # Partitions
 PRODUCT_BUILD_SUPER_PARTITION := false
@@ -443,6 +444,7 @@ PRODUCT_COPY_FILES += \
 # Powerhint
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/powerhint.json:$(TARGET_COPY_OUT_VENDOR)/etc/powerhint.json
+
 # Additional packages
 PRODUCT_PACKAGES += \
     nano \
