@@ -27,6 +27,12 @@
  *
  */
 
+/*
+Changes from Qualcomm Innovation Center are provided under the following license:
+Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+SPDX-License-Identifier: BSD-3-Clause-Clear
+*/
+
 #include "DataItemConcreteTypes.h"
 #include <inttypes.h>
 #include <log_util.h>
@@ -120,6 +126,9 @@
 #define OEM_GTP_UPLAOD_TRIGGER_READY_FIELD_NAME "OEM-GTP-UPLOAD-TRIGGER-READY"
 #define BATTERYLEVEL_FIELD_BATTERY_PCT "BATTERY_PCT"
 
+#define IN_EMERGENCY_CALL_FIELD_NAME "IS_EMERGENCY"
+#define LOC_FEATURE_STATUS_FIELD_NAME "LOC_FEATURE_STATUS"
+
 namespace loc_core
 {
 // stringify
@@ -143,8 +152,26 @@ void ENHDataItem::stringify(string& valueStr) {
         STRINGIFY_ERROR_CHECK_AND_DOWN_CAST(ENHDataItem, ENH_DATA_ITEM_ID);
         valueStr.clear ();
         valueStr = ENH_FIELD_ENABLED;
-        valueStr += ": ";
-        valueStr += (d->mEnabled) ? ("true") : ("false");
+        if (!d->isEnabled()) {
+            Fields field = FIELD_MAX;
+            switch (mFieldUpdate) {
+                case FIELD_CONSENT:
+                    valueStr += "_FIELD_CONSENT";
+                    field = FIELD_CONSENT;
+                    break;
+                case FIELD_REGION:
+                    valueStr += "_FIELD_REGION";
+                    field = FIELD_REGION;
+                    break;
+                default:
+                    break;
+            }
+            valueStr += ": ";
+            valueStr += (((1 << field) & d->mEnhFields) != 0) ? "true" : "false";
+        } else {
+            valueStr += ": ";
+            valueStr += "true";
+        }
     } while (0);
     EXIT_LOG_WITH_ERROR("%d", result);
 }
@@ -553,13 +580,35 @@ int32_t AirplaneModeDataItem::copyFrom(IDataItemCore* src) {
     EXIT_LOG_WITH_ERROR("%d", result);
     return result;
 }
+void InEmergencyCallDataItem::stringify(string& valueStr) {
+    int32_t result = 0;
+    ENTRY_LOG();
+    do {
+        STRINGIFY_ERROR_CHECK_AND_DOWN_CAST(
+                InEmergencyCallDataItem, IN_EMERGENCY_CALL_DATA_ITEM_ID);
+        valueStr.clear ();
+        valueStr += IN_EMERGENCY_CALL_FIELD_NAME;
+        valueStr += ": ";
+        valueStr += (d->mIsEmergency) ? ("true") : ("false");
+    } while (0);
+    EXIT_LOG_WITH_ERROR("%d", result);
+}
 int32_t ENHDataItem::copyFrom(IDataItemCore* src) {
     int32_t result = -1;
     ENTRY_LOG();
     do {
         COPIER_ERROR_CHECK_AND_DOWN_CAST(ENHDataItem,  ENH_DATA_ITEM_ID);
-        if (s->mEnabled == d->mEnabled) { result = true; break; }
-        s->mEnabled = d->mEnabled;
+        if (s->mEnhFields == d->mEnhFields) { result = true; break; }
+        switch (d->mAction) {
+            case SET:
+                s->mEnhFields |= (1 << d->mFieldUpdate);
+                break;
+            case CLEAR:
+                s->mEnhFields &= ~(1 << d->mFieldUpdate);
+                break;
+            default:
+                break;
+        }
         result = 0;
     } while (0);
     EXIT_LOG_WITH_ERROR("%d", result);
@@ -883,6 +932,49 @@ int32_t BtDeviceScanDetailsDataItem::copyFrom(IDataItemCore* src) {
             s->mReceiveTimestamp = d->mReceiveTimestamp;
         }
         if (s->mErrorCause != d->mErrorCause) {s->mErrorCause = d->mErrorCause;}
+        result = 0;
+    } while (0);
+    EXIT_LOG("%d", result);
+    return result;
+}
+
+void LocFeatureStatusDataItem::stringify(string& valueStr) {
+    int32_t result = 0;
+    ENTRY_LOG();
+    do {
+        STRINGIFY_ERROR_CHECK_AND_DOWN_CAST(
+                LocFeatureStatusDataItem, LOC_FEATURE_STATUS_DATA_ITEM_ID);
+        valueStr.clear ();
+        valueStr += LOC_FEATURE_STATUS_FIELD_NAME;
+        valueStr += ": {";
+        for (int item : d->mFids) {
+            valueStr += std::to_string(item) + ", ";
+        }
+        valueStr += "}";
+    } while (0);
+    EXIT_LOG_WITH_ERROR("%d", result);
+}
+
+int32_t LocFeatureStatusDataItem::copyFrom(IDataItemCore* src) {
+    int32_t result = -1;
+    ENTRY_LOG();
+    do {
+        COPIER_ERROR_CHECK_AND_DOWN_CAST(
+                LocFeatureStatusDataItem, LOC_FEATURE_STATUS_DATA_ITEM_ID);
+        s->mFids = d->mFids;
+        result = 0;
+    } while (0);
+    EXIT_LOG("%d", result);
+    return result;
+}
+
+int32_t InEmergencyCallDataItem::copyFrom(IDataItemCore* src) {
+    int32_t result = -1;
+    ENTRY_LOG();
+    do {
+        COPIER_ERROR_CHECK_AND_DOWN_CAST(
+                InEmergencyCallDataItem, IN_EMERGENCY_CALL_DATA_ITEM_ID);
+        s->mIsEmergency = d->mIsEmergency;
         result = 0;
     } while (0);
     EXIT_LOG("%d", result);

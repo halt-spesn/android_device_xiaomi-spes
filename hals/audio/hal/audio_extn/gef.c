@@ -39,7 +39,6 @@
 #include "audio_hw.h"
 #include "platform.h"
 #include "platform_api.h"
-#include <pthread.h>
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <dlfcn.h>
