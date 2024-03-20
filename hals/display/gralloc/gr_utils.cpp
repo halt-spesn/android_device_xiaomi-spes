@@ -203,8 +203,10 @@ bool IsCameraCustomFormat(int format) {
     case HAL_PIXEL_FORMAT_NV12_UBWC_FLEX_8_BATCH:
     case HAL_PIXEL_FORMAT_MULTIPLANAR_FLEX:
     case HAL_PIXEL_FORMAT_RAW_OPAQUE:
+#ifndef NO_RAW10_CUSTOM_FORMAT
     case HAL_PIXEL_FORMAT_RAW10:
     case HAL_PIXEL_FORMAT_RAW12:
+#endif
       return true;
     default:
       break;
@@ -1442,7 +1444,13 @@ int GetImplDefinedFormat(uint64_t usage, int format) {
           gr_format = HAL_PIXEL_FORMAT_NV21_ZSL;  // NV21
         }
       } else {
+#ifdef USE_YCRCB_CAMERA_PREVIEW
+        gr_format = HAL_PIXEL_FORMAT_YCrCb_420_SP;  // NV21 preview
+#elif USE_YCRCB_CAMERA_PREVIEW_VENUS
+        gr_format = HAL_PIXEL_FORMAT_YCrCb_420_SP_VENUS;  // NV21 preview
+#else
         gr_format = HAL_PIXEL_FORMAT_YCbCr_420_SP_VENUS;  // NV12 preview
+#endif
       }
     } else if (usage & BufferUsage::COMPOSER_OVERLAY) {
       // XXX: If we still haven't set a format, default to RGBA8888

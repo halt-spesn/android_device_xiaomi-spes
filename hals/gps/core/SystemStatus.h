@@ -26,43 +26,6 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
-/*
-Changes from Qualcomm Innovation Center are provided under the following license:
-
-Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted (subject to the limitations in the
-disclaimer below) provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-
-    * Redistributions in binary form must reproduce the above
-      copyright notice, this list of conditions and the following
-      disclaimer in the documentation and/or other materials provided
-      with the distribution.
-
-    * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
-      contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
-
-NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
-GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
-HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
 #ifndef __SYSTEM_STATUS__
 #define __SYSTEM_STATUS__
 
@@ -125,7 +88,7 @@ public:
     }
     virtual void dump(void) {};
     inline virtual bool ignore() { return false; };
-    virtual bool equals(const SystemStatusItemBase& peer) { return false; }
+    virtual bool equals(const SystemStatusItemBase& peer __unused) { return false; }
 };
 
 class SystemStatusLocation : public SystemStatusItemBase
@@ -460,16 +423,10 @@ public:
 class SystemStatusENH : public SystemStatusItemBase {
 public:
     ENHDataItem mDataItem;
-    inline SystemStatusENH(bool enabled, ENHDataItem::Fields updateBit = ENHDataItem::FIELD_MAX):
-            mDataItem(enabled, updateBit) {}
+    inline SystemStatusENH(bool enabled=false): mDataItem(enabled) {}
     inline SystemStatusENH(const ENHDataItem& itemBase): mDataItem(itemBase) {}
-    inline virtual SystemStatusItemBase& collate(SystemStatusItemBase& peer) {
-        mDataItem.mEnhFields = ((const SystemStatusENH&)peer).mDataItem.mEnhFields;
-        mDataItem.updateFields();
-        return *this;
-    }
     inline bool equals(const SystemStatusItemBase& peer) override {
-        return mDataItem.mEnhFields == ((const SystemStatusENH&)peer).mDataItem.mEnhFields;
+        return mDataItem.mEnabled == ((const SystemStatusENH&)peer).mDataItem.mEnabled;
     }
 };
 
@@ -522,11 +479,9 @@ public:
         bool rtv = (mDataItem.mAllTypes == peerDI.mAllTypes) &&
                 (mDataItem.mConnected == peerDI.mConnected);
         for (uint8_t i = 0; rtv && i < MAX_NETWORK_HANDLES; ++i) {
-            rtv = (mDataItem.mAllNetworkHandles[i] == peerDI.mAllNetworkHandles[i]) && rtv;
+            rtv &= (mDataItem.mAllNetworkHandles[i] == peerDI.mAllNetworkHandles[i]);
         }
-        rtv = rtv && !peerDI.mApn.compare(mDataItem.mApn);
-        LOC_LOGv("NetworkInfoDataItem quals: %d", rtv);
-        return rtv;
+        return rtv & peerDI.mApn.compare(mDataItem.mApn);
     }
     inline virtual SystemStatusItemBase& collate(SystemStatusItemBase& curInfo) {
         LOC_LOGv("NetworkInfo: mAllTypes=%" PRIx64 " connected=%u mType=%x mApn=%s",
@@ -824,38 +779,6 @@ public:
     }
 };
 
-class SystemStatusLocFeatureStatus : public SystemStatusItemBase {
-public:
-    LocFeatureStatusDataItem mDataItem;
-    inline SystemStatusLocFeatureStatus(std::unordered_set<int> fids) : mDataItem(fids) {}
-    inline SystemStatusLocFeatureStatus(const LocFeatureStatusDataItem& itemBase):
-            mDataItem(itemBase) {}
-    inline bool equals(const SystemStatusItemBase& peer) override {
-        return mDataItem.mFids ==
-            ((const SystemStatusLocFeatureStatus&)peer).mDataItem.mFids;
-    }
-    inline void dump(void) override {
-        string str;
-        mDataItem.stringify(str);
-        LOC_LOGd("Location feature qwes status: %s", str.c_str());
-    }
-};
-
-class SystemStatusInEmergencyCall : public SystemStatusItemBase {
-public:
-    InEmergencyCallDataItem mDataItem;
-    inline SystemStatusInEmergencyCall(bool value = false): mDataItem(value) {}
-    inline SystemStatusInEmergencyCall(const InEmergencyCallDataItem& itemBase):
-            mDataItem(itemBase) {}
-    inline bool equals(const SystemStatusItemBase& peer) override {
-        return mDataItem.mIsEmergency ==
-                    ((const SystemStatusInEmergencyCall&)peer).mDataItem.mIsEmergency;
-    }
-    inline void dump(void) override {
-        LOC_LOGd("In Emergency Call: %d", mDataItem.mIsEmergency);
-    }
-};
-
 /******************************************************************************
  SystemStatusReports
 ******************************************************************************/
@@ -895,7 +818,6 @@ public:
     std::vector<SystemStatusServiceStatus>    mServiceStatus;
     std::vector<SystemStatusModel>            mModel;
     std::vector<SystemStatusManufacturer>     mManufacturer;
-    std::vector<SystemStatusInEmergencyCall>  mInEmergencyCall;
     std::vector<SystemStatusAssistedGps>      mAssistedGps;
     std::vector<SystemStatusScreenState>      mScreenState;
     std::vector<SystemStatusPowerConnectState> mPowerConnectState;
@@ -907,7 +829,6 @@ public:
     std::vector<SystemStatusMccMnc>           mMccMnc;
     std::vector<SystemStatusBtDeviceScanDetail> mBtDeviceScanDetail;
     std::vector<SystemStatusBtleDeviceScanDetail> mBtLeDeviceScanDetail;
-    std::vector<SystemStatusLocFeatureStatus>  mLocFeatureStatus;
 };
 
 /******************************************************************************
@@ -953,10 +874,6 @@ public:
                                bool roaming, NetworkHandle networkHandle, string& apn);
     bool updatePowerConnectState(bool charging);
     void resetNetworkInfo();
-    bool eventOptInStatus(bool userConsent);
-    bool eventRegionStatus(bool region);
-    bool eventLocFeatureStatus(std::unordered_set<int> fids);
-    bool eventInEmergencyCall(bool isEmergency);
 };
 
 } // namespace loc_core

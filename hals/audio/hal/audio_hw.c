@@ -35,7 +35,7 @@
  * limitations under the License.
  *
  * Changes from Qualcomm Innovation Center are provided under the following license:
- * Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  *
  */
@@ -89,6 +89,8 @@
 #endif
 
 #include "sound/asound.h"
+
+#include "audio_amplifier.h"
 
 #ifdef DYNAMIC_LOG_ENABLED
 #include <log_xml_parser.h>
@@ -1686,6 +1688,7 @@ int enable_snd_device(struct audio_device *adev,
          audio_extn_spkr_prot_calib_cancel(adev);
 
     audio_extn_dsm_feedback_enable(adev, snd_device, true);
+    amplifier_enable_devices(snd_device, true);
 
     if (platform_can_enable_spkr_prot_on_device(snd_device) &&
          audio_extn_spkr_prot_is_enabled()) {
@@ -1776,6 +1779,7 @@ int enable_snd_device(struct audio_device *adev,
         }
         audio_extn_dev_arbi_acquire(snd_device);
         audio_route_apply_and_update_path(adev->audio_route, device_name);
+        amplifier_set_feedback(adev, snd_device, true);
 
         if (SND_DEVICE_OUT_HEADPHONES == snd_device &&
             !adev->native_playback_enabled &&
@@ -1829,6 +1833,7 @@ int disable_snd_device(struct audio_device *adev,
         ALOGD("%s: snd_device(%d: %s)", __func__, snd_device, device_name);
 
         audio_extn_dsm_feedback_enable(adev, snd_device, false);
+        amplifier_enable_devices(snd_device, false);
 
         if (platform_can_enable_spkr_prot_on_device(snd_device) &&
              audio_extn_spkr_prot_is_enabled()) {
@@ -1877,6 +1882,7 @@ int disable_snd_device(struct audio_device *adev,
         }
 
         audio_extn_utils_release_snd_device(snd_device);
+        amplifier_set_feedback(adev, snd_device, false);
     } else {
         if (platform_split_snd_device(adev->platform,
                     snd_device,
@@ -3298,6 +3304,10 @@ int select_devices(struct audio_device *adev, audio_usecase_t uc_id)
         disable_snd_device(adev, usecase->in_snd_device);
     }
 
+    /* Rely on amplifier_set_devices to distinguish between in/out devices */
+    amplifier_set_input_devices(in_snd_device);
+    amplifier_set_output_devices(out_snd_device);
+
     /* Applicable only on the targets that has external modem.
      * New device information should be sent to modem before enabling
      * the devices to reduce in-call device switch time.
@@ -3566,9 +3576,6 @@ static int stop_input_stream(struct stream_in *in)
     }
 
     enable_gcov();
-#ifdef PURGE_UNUSED_MEM
-    mallopt(M_PURGE, 0);
-#endif
     ALOGV("%s: exit: status(%d)", __func__, ret);
     return ret;
 }
@@ -4208,9 +4215,6 @@ static int stop_output_stream(struct stream_out *out)
 
     clear_devices(&uc_info->device_list);
     free(uc_info);
-#ifdef PURGE_UNUSED_MEM
-    mallopt(M_PURGE, 0);
-#endif
     ALOGV("%s: exit: status(%d)", __func__, ret);
     return ret;
 }
@@ -5015,6 +5019,9 @@ static int out_standby(struct audio_stream *stream)
         }
 
         pthread_mutex_lock(&adev->lock);
+
+        amplifier_output_stream_standby((struct audio_stream_out *) stream);
+
         out->standby = true;
         if (out->usecase == USECASE_COMPRESS_VOIP_CALL) {
             voice_extn_compress_voip_close_output_stream(stream);
@@ -5510,6 +5517,8 @@ static int out_set_parameters(struct audio_stream *stream, const char *kvpairs)
     parms = str_parms_create_str(kvpairs);
     if (!parms)
         goto error;
+
+    amplifier_out_set_parameters(parms);
 
     err = platform_get_controller_stream_from_params(parms, &ext_controller,
                                                        &ext_stream);
@@ -6427,6 +6436,11 @@ static ssize_t out_write(struct audio_stream_out *stream, const void *buffer,
             ret = voice_extn_compress_voip_start_output_stream(out);
         else
             ret = start_output_stream(out);
+
+        if (ret == 0)
+            amplifier_output_stream_start(stream,
+                    is_offload_usecase(out->usecase));
+
         /* ToDo: If use case is compress offload should return 0 */
         if (ret != 0) {
             out->standby = true;
@@ -7335,6 +7349,8 @@ static int in_standby(struct audio_stream *stream)
             adev->adm_deregister_stream(adev->adm_data, in->capture_handle);
 
         pthread_mutex_lock(&adev->lock);
+        amplifier_input_stream_standby((struct audio_stream_in *) stream);
+
         in->standby = true;
         if (in->usecase == USECASE_COMPRESS_VOIP_CALL) {
             do_stop = false;
@@ -7518,6 +7534,9 @@ static int in_set_parameters(struct audio_stream *stream, const char *kvpairs)
 
     if (!parms)
         goto error;
+
+    amplifier_in_set_parameters(parms);
+
     lock_input_stream(in);
     pthread_mutex_lock(&adev->lock);
 
@@ -7666,6 +7685,10 @@ static ssize_t in_read(struct audio_stream_in *stream, void *buffer,
             if (adev->num_va_sessions < UINT_MAX)
                 adev->num_va_sessions++;
         }
+
+        if (ret == 0)
+            amplifier_input_stream_start(stream);
+
         pthread_mutex_unlock(&adev->lock);
         if (ret != 0) {
             goto exit;
@@ -9570,6 +9593,7 @@ static int adev_set_parameters(struct audio_hw_device *dev, const char *kvpairs)
         }
     }
 
+    amplifier_set_parameters(parms);
     audio_extn_auto_hal_set_parameters(adev, parms);
     audio_extn_set_parameters(adev, parms);
 done:
@@ -9699,6 +9723,8 @@ static int adev_set_mode(struct audio_hw_device *dev, audio_mode_t mode)
     if (adev->mode != mode) {
         ALOGD("%s: mode %d , prev_mode %d \n", __func__, mode , adev->mode);
         adev->prev_mode = adev->mode; /* prev_mode is kept to handle voip concurrency*/
+        if (amplifier_set_mode(mode) != 0)
+            ALOGE("Failed setting amplifier mode");
         adev->mode = mode;
         if (mode == AUDIO_MODE_CALL_SCREEN) {
             adev->current_call_output = adev->primary_output;
@@ -10817,13 +10843,8 @@ int adev_create_audio_patch(struct audio_hw_device *dev,
         s_info = hashmapGet(adev->io_streams_map, (void *) (intptr_t) io_handle);
         if (s_info == NULL) {
             ALOGE("%s: Failed to obtain stream info", __func__);
-            if (new_patch) {
-
-                if(p_info->patch)
-                    free(p_info->patch);
-
+            if (new_patch)
                 free(p_info);
-            }
             pthread_mutex_unlock(&adev->lock);
             ret = -EINVAL;
             goto done;
@@ -10844,13 +10865,8 @@ int adev_create_audio_patch(struct audio_hw_device *dev,
         if (ret < 0) {
             pthread_mutex_lock(&adev->lock);
             s_info->patch_handle = AUDIO_PATCH_HANDLE_NONE;
-            if (new_patch) {
-
-                if(p_info->patch)
-                    free(p_info->patch);
-
+            if (new_patch)
                 free(p_info);
-            }
             pthread_mutex_unlock(&adev->lock);
             ALOGE("%s: Stream routing failed for io_handle %d", __func__, io_handle);
             goto done;
@@ -11015,6 +11031,8 @@ static int adev_close(hw_device_t *device)
     if ((--audio_device_ref_count) == 0) {
          if (audio_extn_spkr_prot_is_enabled())
              audio_extn_spkr_prot_deinit();
+        if (amplifier_close() != 0)
+            ALOGE("Amplifier close failed");
         audio_extn_battery_properties_listener_deinit();
         audio_extn_snd_mon_unregister_listener(adev);
         audio_extn_sound_trigger_deinit(adev);
@@ -11465,6 +11483,10 @@ static int adev_open(const hw_module_t *module, const char *name,
     adev->vr_audio_mode_enabled = false;
 
     audio_extn_ds2_enable(adev);
+
+    if (amplifier_open(adev) != 0)
+        ALOGE("Amplifier initialization failed");
+
     *device = &adev->device.common;
 
     if (k_enable_extended_precision)

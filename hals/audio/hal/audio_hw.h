@@ -76,6 +76,7 @@
 #include <cutils/str_parms.h>
 #include <cutils/list.h>
 #include <cutils/hashmap.h>
+#include <hardware/audio_amplifier.h>
 #include <hardware/audio.h>
 #include <tinyalsa/asoundlib.h>
 #include <tinycompress/tinycompress.h>
@@ -110,13 +111,14 @@ typedef struct {
 #endif
 
 #if LINUX_ENABLED
-#define ADM_LIBRARY_PATH "/usr/lib/libadm.so"
 #if defined(__LP64__)
 #define VISUALIZER_LIBRARY_PATH "/usr/lib64/libqcomvisualizer.so"
 #define OFFLOAD_EFFECTS_BUNDLE_LIBRARY_PATH "/usr/lib64/libqcompostprocbundle.so"
+#define ADM_LIBRARY_PATH "/usr/lib64/libadm.so"
 #else
 #define VISUALIZER_LIBRARY_PATH "/usr/lib/libqcomvisualizer.so"
 #define OFFLOAD_EFFECTS_BUNDLE_LIBRARY_PATH "/usr/lib/libqcompostprocbundle.so"
+#define ADM_LIBRARY_PATH "/usr/lib/libadm.so"
 #endif
 #else
 #if defined(__LP64__)
@@ -849,6 +851,8 @@ struct audio_device {
     bool ha_proxy_enable;
     int ext_controller;
     int ext_stream;
+
+    amplifier_device_t *amp;
 };
 
 struct audio_patch_record {

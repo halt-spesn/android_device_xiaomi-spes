@@ -1,9 +1,11 @@
+ifneq ($(strip $(TARGET_PROVIDES_AUDIO_EXTNS)),true)
+
 #AudioHal-primaryHal-Hal path
 ifneq ($(BOARD_OPENSOURCE_DIR), )
   PRIMARY_HAL_PATH := $(BOARD_OPENSOURCE_DIR)/audio-hal/primary-hal/hal
   AUDIO_KERNEL_INC := $(TARGET_OUT_INTERMEDIATES)/$(BOARD_OPENSOURCE_DIR)/audio-kernel/include
 else
-  PRIMARY_HAL_PATH := vendor/qcom/opensource/audio-hal/primary-hal/hal
+  PRIMARY_HAL_PATH := $(TARGET_HALS_PATH)/audio/hal
   AUDIO_KERNEL_INC := $(TARGET_OUT_INTERMEDIATES)/vendor/qcom/opensource/audio-kernel/include
 endif # BOARD_OPENSOURCE_DIR
 
@@ -188,6 +190,10 @@ LOCAL_CFLAGS += \
     -Werror \
     -Wno-unused-function \
     -Wno-unused-variable
+
+ifeq ($(QCPATH),)
+  LOCAL_CFLAGS += -D_OSS
+endif
 
 LOCAL_SHARED_LIBRARIES := \
     libaudioutils \
@@ -822,6 +828,8 @@ include $(BUILD_SHARED_LIBRARY)
 #-------------------------------------------
 #            Build HDMI PASSTHROUGH
 #-------------------------------------------
+ifneq ($(QCPATH),)
+
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := libhdmipassthru
@@ -900,6 +908,8 @@ LOCAL_SANITIZE := integer_overflow
 endif
 include $(BUILD_SHARED_LIBRARY)
 
+endif
+
 #-------------------------------------------
 #            Build BATTERY_LISTENER
 #-------------------------------------------
@@ -929,6 +939,7 @@ LOCAL_CFLAGS += \
 LOCAL_SHARED_LIBRARIES := \
     android.hardware.health@1.0 \
     android.hardware.health@2.0 \
+    android.hardware.health@2.1 \
     android.hardware.power@1.2 \
     libaudioroute \
     libaudioutils \
@@ -1280,4 +1291,5 @@ ifeq ($(strip $(AUDIO_FEATURE_ENABLED_DAEMON_SUPPORT)),true)
 endif
 
 include $(BUILD_SHARED_LIBRARY)
+endif
 endif

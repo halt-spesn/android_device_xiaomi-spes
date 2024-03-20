@@ -58,7 +58,7 @@ libmm-venc-def += -DUSE_CAMERA_METABUFFER_UTILS
 libmm-venc-inc      := $(LOCAL_PATH)/inc
 libmm-venc-inc      += $(LIBION_HEADER_PATHS)
 libmm-venc-inc      += $(TOP)/device/xiaomi/spes/hals/media/mm-video-v4l2/vidc/common/inc
-libmm-venc-inc      += devivce/xiaomi/spes/hals/media/mm-core/inc
+libmm-venc-inc      += device/xiaomi/spes/hals/media/mm-core/inc
 libmm-venc-inc      += device/xiaomi/spes/hals/media/libstagefrighthw
 libmm-venc-inc      += device/xiaomi/spes/hals/media/libplatformconfig
 libmm-venc-inc      += $(TARGET_OUT_HEADERS)/adreno
@@ -102,7 +102,7 @@ LOCAL_HEADER_LIBRARIES := \
         libcutils_headers \
         libutils_headers \
         libhardware_headers \
-        display_intf_headers
+        display_headers
 
 LOCAL_C_INCLUDES                := $(libmm-venc-inc)
 LOCAL_ADDITIONAL_DEPENDENCIES   := $(libmm-venc-add-dep)
@@ -129,6 +129,7 @@ ifneq ($(call is-board-platform-in-list, $(TARGETS_THAT_DONT_NEED_SW_VENC_MPEG4)
 # 			Make the Shared library (libOmxSwVencMpeg4)
 # ---------------------------------------------------------------------------------
 
+ifneq ($(QCPATH),)
 include $(CLEAR_VARS)
 
 libmm-venc-inc      += $(TARGET_OUT_HEADERS)/mm-video/swvenc
@@ -152,7 +153,7 @@ LOCAL_HEADER_LIBRARIES := \
         libnativebase_headers \
         libutils_headers \
         libhardware_headers \
-        display_intf_headers
+        display_headers
 
 LOCAL_C_INCLUDES                := $(libmm-venc-inc)
 LOCAL_ADDITIONAL_DEPENDENCIES   := $(libmm-venc-add-dep)
@@ -177,6 +178,7 @@ LOCAL_SRC_FILES   := src/omx_video_base.cpp
 LOCAL_SRC_FILES   += src/omx_swvenc_mpeg4.cpp
 
 include $(BUILD_SHARED_LIBRARY)
+endif # QCPATH
 endif
 
 

@@ -65,9 +65,9 @@ libmm-vdec-inc          := $(LOCAL_PATH)/inc
 libmm-vdec-inc          += $(LIBION_HEADER_PATHS)
 libmm-vdec-inc          += $(TOP)/device/xiaomi/spes/hals/media/mm-video-v4l2/vidc/common/inc
 libmm-vdec-inc          += $(TOP)/device/xiaomi/spes/hals/media/mm-core/inc
-libmm-vdec-inc          += device/xiaomi/spes/hals/libplatformconfig
+libmm-vdec-inc          += device/xiaomi/spes/hals/media/libplatformconfig
 libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/adreno
-libmm-vdec-inc      	+= $(TOP)/device/xiaomi/spes/hals/libc2dcolorconvert
+libmm-vdec-inc      	+= $(TOP)/device/xiaomi/spes/hals/media/libc2dcolorconvert
 libmm-vdec-inc      	+= $(TARGET_OUT_HEADERS)/mm-video/SwVdec
 libmm-vdec-inc      	+= $(TARGET_OUT_HEADERS)/mm-video/swvdec
 libmm-vdec-inc      	+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
@@ -75,7 +75,7 @@ libmm-vdec-inc      	+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 
 ifeq ($(PLATFORM_SDK_VERSION), 18)  #JB_MR2
 libmm-vdec-def += -DANDROID_JELLYBEAN_MR2=1
-libmm-vdec-inc += $(TOP)/device/xiaomi/spes/hals/libstagefrighthw
+libmm-vdec-inc += $(TOP)/device/xiaomi/spes/hals/media/libstagefrighthw
 endif
 
 # Common Dependencies
@@ -117,7 +117,7 @@ LOCAL_HEADER_LIBRARIES := \
         libnativebase_headers \
         libutils_headers \
         libhardware_headers \
-        display_intf_headers
+        display_headers
 
 LOCAL_C_INCLUDES                += $(libmm-vdec-inc)
 LOCAL_ADDITIONAL_DEPENDENCIES   := $(libmm-vdec-add-dep)
@@ -164,7 +164,7 @@ LOCAL_HEADER_LIBRARIES := \
         libnativebase_headers \
         libutils_headers \
         libhardware_headers \
-        display_intf_headers
+        display_headers
 
 LOCAL_C_INCLUDES              += $(libmm-vdec-inc)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libmm-vdec-add-dep)
