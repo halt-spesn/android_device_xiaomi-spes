@@ -660,5 +660,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Terminal
 
+TARGET_SUPPORTS_GOOGLE_RECORDER := true
+
 # Inherit the proprietary files
 $(call inherit-product, vendor/xiaomi/spes/spes-vendor.mk)
