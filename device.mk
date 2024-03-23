@@ -280,10 +280,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
 
-#Framework prebuilt overlay
-#PRODUCT_COPY_FILES += \
-#    $(LOCAL_PATH)/framework/framework-res__auto_generated_rro_vendor.apk:$(TARGET_COPY_OUT_VENDOR)/overlay/framework-res__auto_generated_rro_vendor.apk
-
 # FM
 PRODUCT_PACKAGES += \
     FM2 \
